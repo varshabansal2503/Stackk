@@ -1,0 +1,225 @@
+ANS:1 -------
+Given a string s containing just the characters '(', ')', '{', '}', '[' and ']', determine if the input string is valid.
+class Solution {
+    public boolean isValid(String s) {
+        Stack<Character> st=new Stack<Character>();
+        for(int i=0;i<s.length();i++)
+        {
+            if(s.charAt(i)=='(' || s.charAt(i)=='{' || s.charAt(i)=='[')
+            {
+                st.push(s.charAt(i));
+            }
+            else if(st.isEmpty())
+            {
+                return false;
+            }
+              else if (st.peek() == '{' && s.charAt(i) == '}' ) {
+                st.pop();
+            } else if (st.peek() == '(' && s.charAt(i) == ')' ) {
+                st.pop();
+            } else if (st.peek() == '[' && s.charAt(i) == ']' ) {
+                st.pop();
+            }else{
+                return false;
+            }
+           
+        }
+         return st.isEmpty();
+    }
+   
+}
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ANS:2--
+Given an array, find the nearest smaller element G[i] for every element A[i] in the array such that the element has an index smaller than i.
+
+public class Solution {
+    public int[] prevSmaller(int[] A) {
+           int n = A.length;
+        int[] result = new int[n];
+        Stack<Integer> stack = new Stack<>();
+
+        for (int i = 0; i < n; i++) {
+         
+            while (!stack.isEmpty() && A[stack.peek()] >= A[i]) {
+                stack.pop();
+            }
+              if (stack.isEmpty()) {
+                result[i] = -1;
+            } else {
+                result[i] = A[stack.peek()];
+            }
+           
+            stack.push(i);
+        }
+
+        return result;
+    }
+}
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ANS:3--
+Given an array of integers heights representing the histogram's bar height where the width of each bar is 1, return the area of the largest rectangle in the histogram.
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ANS:4--
+Given an array of integers arr, find the sum of min(b), where b ranges over every (contiguous) subarray of arr. Since the answer may be large, return the answer modulo 109 + 7.
+
+class Solution {
+    public int sumSubarrayMins(int[] arr) {
+         int ans = 0;
+        Stack<Integer> st = new Stack<>();
+        long mod = (long)1000000007;
+        st.push(-1);
+        for (int i= 0; i < arr.length+1; i++){
+            int currVal = (i<=arr.length-1)? arr[i] : 0;
+            while(st.peek() !=-1 && currVal<arr[st.peek()]){
+                int index = st.pop();
+                int j = st.peek();
+                int left = index - j;
+                int right = i - index;
+                long add = (left * right * (long)arr[index]) % mod;
+                ans += add ;
+                ans %= mod;
+            }
+            st.push(i);
+        }
+        return ans;
+    }
+}
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ANS:5---
+The next greater element of some element x in an array is the first greater element that is to the right of x in the same array
+class Solution {
+    public int[] nextGreaterElement(int[] nums1, int[] nums2) {
+         int[] ans = new int[nums1.length];
+        for(int i = 0; i < nums1.length; i++){
+            int max = -1;
+            for(int j = 0; j < nums2.length; j++){
+                int index = j;
+                if(nums1[i] == nums2[j]){ // Found element in nums2 that matches current element in nums1
+                    while(index != nums2.length){ // Iterate through remaining elements in nums2 to find next greater element
+                        if(nums2[index] > nums1[i]){
+                            max = nums2[index]; // Update max if we find a greater element
+                            break;
+                        }
+                        index++;
+                    }
+                }
+            }
+            ans[i] = max;
+        }
+        return ans;
+    }
+}
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ANS:5----
+Given a rows x cols binary matrix filled with 0's and 1's, find the largest rectangle containing only 1's and return its area
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ANS:7---
+Given a stack, the task is to sort it such that the top of the stack has the greatest element.
+class GfG{
+	public Stack<Integer> sort(Stack<Integer> s)
+	{
+	
+		  Stack<Integer> tempStack = new Stack<>();
+
+        while (!s.isEmpty()) {
+            int temp = s.pop();
+
+           
+            while (!tempStack.isEmpty() && tempStack.peek() < temp) {
+                s.push(tempStack.pop());
+            }
+
+          
+            tempStack.push(temp);
+        }
+
+   
+        while (!tempStack.isEmpty()) {
+            s.push(tempStack.pop());
+		
+	}
+	return s;
+	}
+}
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ANS:8----
+Design a stack that supports increment operations on its elements.
+class CustomStack {
+      int[] arr;
+    int top;
+    int maxSize;
+    public CustomStack(int maxSize) {
+         arr = new int[maxSize];
+        top = -1;
+        this.maxSize = maxSize;
+    }
+    
+    public void push(int x) {
+         if(top < maxSize-1) {
+            arr[++top] = x;
+        }
+        
+    }
+    
+    public int pop() {
+        if(top == -1){
+            return -1;
+        }
+        return arr[top--];
+    }
+    
+    public void increment(int k, int val) {
+        int margin = (int)Math.min(k, arr.length);
+        for (int i=0; i<margin; i++) {
+            arr[i]+=val;
+        }
+    }
+}
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ANS:9---
+Design a stack that supports push, pop, top, and retrieving the minimum element in constant time.
+class Pair{
+    int val;
+    int minVal;
+
+    Pair(int val, int minVal){
+        this.val = val;
+        this.minVal = minVal;
+    }
+}
+class MinStack {
+      Stack<Pair> st;
+    public MinStack() {
+         
+            
+        st = new Stack<>();
+    }
+    
+    
+    public void push(int val) {
+         if(st.size() == 0){
+            st.push(new Pair(val, val));
+        }else{
+            int min = Math.min(val, st.peek().minVal);
+            st.push(new Pair(val, min));
+        }
+    }
+    
+    public void pop() {
+           st.pop();
+    }
+    
+    public int top() {
+          Pair p = st.peek();
+        return p.val;
+    }
+    
+    public int getMin() {
+          Pair p = st.peek();
+        return p.minVal;
+    }
+}
+
+
